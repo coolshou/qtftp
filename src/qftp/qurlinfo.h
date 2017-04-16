@@ -48,10 +48,20 @@
 
 QT_BEGIN_NAMESPACE
 
+#ifdef QFTP_SHARED
+#   ifdef QFTP_BUILD
+#       define QFTP_EXPORT Q_DECL_EXPORT
+#   else
+#       define QFTP_EXPORT Q_DECL_IMPORT
+#   endif
+#else
+#   define QFTP_EXPORT
+#endif
+
 class QUrl;
 class QUrlInfoPrivate;
 
-class QUrlInfo
+class QFTP_EXPORT QUrlInfo
 {
 public:
     enum PermissionSpec {
