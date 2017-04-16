@@ -44,13 +44,23 @@
 
 #include <QtCore/qstring.h>
 #include <QtCore/qobject.h>
-#include <QtFtp/qurlinfo.h>
+#include <qurlinfo.h>
 
 QT_BEGIN_NAMESPACE
 
+#ifdef QFTP_SHARED
+#   ifdef QFTP_BUILD
+#       define QFTP_EXPORT Q_DECL_EXPORT
+#   else
+#       define QFTP_EXPORT Q_DECL_IMPORT
+#   endif
+#else
+#   define QFTP_EXPORT
+#endif
+
 class QFtpPrivate;
 
-class QFtp : public QObject
+class QFTP_EXPORT QFtp : public QObject
 {
     Q_OBJECT
 

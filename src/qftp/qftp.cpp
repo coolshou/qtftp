@@ -91,6 +91,7 @@ public:
     void clearError();
 
     void connectToHost(const QString & host, quint16 port);
+    void disconnectSignals();
     int setupListener(const QHostAddress &address);
     void waitForConnection();
 
@@ -157,6 +158,7 @@ public:
     QFtpPI(QObject *parent = 0);
 
     void connectToHost(const QString &host, quint16 port);
+    void disconnectSignals();
 
     bool sendCommands(const QStringList &cmds);
     bool sendCommand(const QString &cmd)
@@ -315,7 +317,7 @@ void QFtpDTP::connectToHost(const QString & host, quint16 port)
     bytesFromSocket.clear();
 
     if (socket) {
-        delete socket;
+        socket->deleteLater();
         socket = 0;
     }
     socket = new QTcpSocket(this);
@@ -331,6 +333,12 @@ void QFtpDTP::connectToHost(const QString & host, quint16 port)
     connect(socket, SIGNAL(bytesWritten(qint64)), SLOT(socketBytesWritten(qint64)));
 
     socket->connectToHost(host, port);
+}
+
+void QFtpDTP::disconnectSignals()
+{
+    if (socket)
+        disconnect(socket, 0, 0, 0);
 }
 
 int QFtpDTP::setupListener(const QHostAddress &address)
@@ -811,6 +819,14 @@ QFtpPI::QFtpPI(QObject *parent) :
 
     connect(&dtp, SIGNAL(connectState(int)),
              SLOT(dtpConnectState(int)));
+}
+
+void QFtpPI::disconnectSignals()
+{
+    if (&commandSocket)
+        disconnect(&commandSocket, 0, 0, 0);
+    if (&dtp)
+        disconnect(&dtp, 0, 0, 0);
 }
 
 void QFtpPI::connectToHost(const QString &host, quint16 port)
@@ -2390,8 +2406,10 @@ void QFtpPrivate::_q_piFtpReply(int code, const QString &text)
 */
 QFtp::~QFtp()
 {
-    abort();
-    close();
+    d->pi.dtp.disconnectSignals();
+    d->pi.disconnectSignals();
+    //abort();
+    //close();
 }
 
 QT_END_NAMESPACE
