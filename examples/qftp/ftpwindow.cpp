@@ -48,7 +48,8 @@ FtpWindow::FtpWindow(QWidget *parent)
     : QDialog(parent), ftp(0), networkSession(0)
 {
     ftpServerLabel = new QLabel(tr("Ftp &server:"));
-    ftpServerLineEdit = new QLineEdit("ftp.qt.nokia.com");
+    //ftpServerLineEdit = new QLineEdit("ftp.qt.nokia.com");
+    ftpServerLineEdit = new QLineEdit("ftp.cis.nctu.edu.tw");
     ftpServerLabel->setBuddy(ftpServerLineEdit);
 
     statusLabel = new QLabel(tr("Please enter the name of an FTP server."));
@@ -75,13 +76,13 @@ FtpWindow::FtpWindow(QWidget *parent)
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-    progressDialog = new QProgressDialog(this);
+    //progressDialog = new QProgressDialog(this);
 
     connect(fileList, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
             this, SLOT(processItem(QTreeWidgetItem*,int)));
     connect(fileList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(enableDownloadButton()));
-    connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
+    //connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
     connect(connectButton, SIGNAL(clicked()), this, SLOT(connectOrDisconnect()));
     connect(cdToParentButton, SIGNAL(clicked()), this, SLOT(cdToParent()));
     connect(downloadButton, SIGNAL(clicked()), this, SLOT(downloadFile()));
@@ -227,15 +228,16 @@ void FtpWindow::downloadFile()
 
     ftp->get(fileList->currentItem()->text(0), file);
 
-    progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
+    //progressDialog->setLabelText(tr("Downloading %1...").arg(fileName));
     downloadButton->setEnabled(false);
-    progressDialog->exec();
+    //progressDialog->exec();
 }
 //![4]
 
 //![5]
 void FtpWindow::cancelDownload()
 {
+    //TODO: this will cause app crash? why?
     ftp->abort();
 
     if (file->exists()) {
@@ -291,7 +293,7 @@ void FtpWindow::ftpCommandFinished(int, bool error)
         }
         delete file;
         enableDownloadButton();
-        progressDialog->hide();
+        //progressDialog->hide();
 //![8]
 //![9]
     } else if (ftp->currentCommand() == QFtp::List) {
@@ -368,8 +370,8 @@ void FtpWindow::cdToParent()
 void FtpWindow::updateDataTransferProgress(qint64 readBytes,
                                            qint64 totalBytes)
 {
-    progressDialog->setMaximum(totalBytes);
-    progressDialog->setValue(readBytes);
+    //progressDialog->setMaximum(totalBytes);
+    //progressDialog->setValue(readBytes);
 }
 //![13]
 
