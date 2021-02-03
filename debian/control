@@ -1,0 +1,24 @@
+Source: libqtftp
+Priority: optional
+Maintainer: coolshou <coolshou2060@gmail.com>
+Build-Depends: debhelper-compat (= 12), qtbase5-dev
+Standards-Version: 4.4.1
+Section: libs
+Homepage: https://github.com/coolshou/qtftp.git
+#Vcs-Browser: https://salsa.debian.org/debian/qtftp
+#Vcs-Git: https://salsa.debian.org/debian/qtftp.git
+
+Package: libqtftp-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libqtftp1 (= ${binary:Version}), ${misc:Depends}
+Description: development file of qftp lib for QT5
+ This repository contains deprecated APIs which have been removed from Qt5
+
+Package: libqtftp1
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: qftp lib for QT5
+ This repository contains deprecated APIs which have been removed from Qt5
